@@ -20,6 +20,8 @@ public class ParticlePlugin extends JavaPlugin {
 		} else {
 			FileUtil.readAll(animationFolder, (a) -> Animation.register(a));
 		}
+		
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> Manager.tick(), 0, 1);
 	}
 	
 	@Override
