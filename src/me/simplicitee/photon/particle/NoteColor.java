@@ -1,4 +1,4 @@
-package me.simplicitee.particles.particle;
+package me.simplicitee.photon.particle;
 
 public enum NoteColor {
 	GREEN, 

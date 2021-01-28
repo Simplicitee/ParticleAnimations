@@ -1,8 +1,8 @@
-package me.simplicitee.particles.animation;
+package me.simplicitee.photon.animation;
 
 import org.bukkit.Location;
 
-import me.simplicitee.particles.util.Updateable;
+import me.simplicitee.photon.util.Updateable;
 
 public abstract class Animator {
 	
@@ -13,4 +13,5 @@ public abstract class Animator {
 	}
 	
 	public abstract Location update();
+	public abstract void postUpdate();
 }

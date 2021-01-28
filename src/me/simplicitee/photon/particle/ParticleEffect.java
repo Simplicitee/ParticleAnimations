@@ -1,6 +1,7 @@
-package me.simplicitee.particles.particle;
+package me.simplicitee.photon.particle;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -12,10 +13,13 @@ import org.bukkit.Particle.DustOptions;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import com.google.common.collect.ImmutableList;
+
 public class ParticleEffect {
 	
 	private static final Map<String, ParticleEffect> EFFECTS = new HashMap<>();
 	private static final Map<Particle, Object> DEFAULTS = new HashMap<>();
+	private static ImmutableList<String> names;
 	
 	static {
 		// spigot accounted for data
@@ -84,12 +88,18 @@ public class ParticleEffect {
 		return Optional.ofNullable(EFFECTS.get(name.toLowerCase()));
 	}
 	
-	public static boolean create(String name, Particle particle, Object data) {
+	public static Optional<ParticleEffect> create(String name, Particle particle, Object data) {
 		if (EFFECTS.containsKey(name.toLowerCase())) {
-			return false;
+			return Optional.empty();
 		}
 		
-		EFFECTS.put(name.toLowerCase(), new ParticleEffect(name, particle, data));
-		return true;
+		ParticleEffect effect = new ParticleEffect(name, particle, data);
+		EFFECTS.put(name.toLowerCase(), effect);
+		names = ImmutableList.copyOf(EFFECTS.keySet());
+		return Optional.of(effect);
+	}
+	
+	public static List<String> listNames() {
+		return names;
 	}
 }

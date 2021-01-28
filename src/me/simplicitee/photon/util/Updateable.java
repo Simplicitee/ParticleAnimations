@@ -1,4 +1,4 @@
-package me.simplicitee.particles.util;
+package me.simplicitee.photon.util;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -18,6 +18,6 @@ public interface Updateable<T> {
 	}
 	
 	public static Updateable<Location> unchanging(Location loc) {
-		return () -> loc;
+		return () -> loc.clone();
 	}
 }

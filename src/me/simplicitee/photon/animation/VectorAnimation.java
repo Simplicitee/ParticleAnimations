@@ -1,4 +1,4 @@
-package me.simplicitee.particles.animation;
+package me.simplicitee.photon.animation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,28 +6,28 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import me.simplicitee.particles.util.Updateable;
+import me.simplicitee.photon.util.Updateable;
 
-public class CustomAnimation extends Animation {
+public class VectorAnimation extends Animation {
 
 	private List<Vector> vectors;
 	
-	CustomAnimation(String name, List<Vector> vectors) {
+	VectorAnimation(String name, List<Vector> vectors) {
 		super(name);
 		this.vectors = new ArrayList<>(vectors);
 	}
 
 	@Override
 	public Animator instance(Updateable<Location> updater) {
-		return new CustomAnimator(updater, vectors);
+		return new VectorAnimator(updater, vectors);
 	}
 
-	public static class CustomAnimator extends Animator {
+	public static class VectorAnimator extends Animator {
 		
 		private int step;
 		private List<Vector> vectors;
 		
-		CustomAnimator(Updateable<Location> updater, List<Vector> vectors) {
+		VectorAnimator(Updateable<Location> updater, List<Vector> vectors) {
 			super(updater);
 			this.step = 0;
 			this.vectors = vectors;
@@ -35,10 +35,12 @@ public class CustomAnimation extends Animation {
 
 		@Override
 		public Location update() {
-			Location loc = updater.get();
-			loc.add(vectors.get(step));
+			return updater.get().add(vectors.get(step));
+		}
+		
+		@Override
+		public void postUpdate() {
 			step = (step + 1) % vectors.size();
-			return loc;
 		}
 	}
 	
@@ -61,8 +63,8 @@ public class CustomAnimation extends Animation {
 			return this;
 		}
 		
-		public CustomAnimation build(String name) {
-			return new CustomAnimation(name, vectors);
+		public VectorAnimation build(String name) {
+			return new VectorAnimation(name, vectors);
 		}
 	}
 }

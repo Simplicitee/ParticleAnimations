@@ -1,22 +1,26 @@
-package me.simplicitee.particles.animation;
+package me.simplicitee.photon.animation;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 
-import me.simplicitee.particles.util.Updateable;
+import com.google.common.collect.ImmutableList;
+
+import me.simplicitee.photon.util.Updateable;
 
 public abstract class Animation {
 	
 	private static final Map<String, Animation> ANIMATIONS = new HashMap<>();
+	private static ImmutableList<String> names;
 	
 	private String name;
 	
 	public Animation(String name) {
-		this.name = name.toLowerCase();
+		this.name = name;
 	}
 	
 	public final String getName() {
@@ -28,8 +32,9 @@ public abstract class Animation {
 	public static void register(Animation animation) {
 		Validate.notNull(animation, "Registration error: null animation");
 		Validate.notNull(animation.getName(), "Registration error: null name");
-		Validate.isTrue(!ANIMATIONS.containsKey(animation.name), "Registration error: duplicate name");
-		ANIMATIONS.put(animation.name, animation);
+		Validate.isTrue(!ANIMATIONS.containsKey(animation.name.toLowerCase()), "Registration error: duplicate name");
+		ANIMATIONS.put(animation.name.toLowerCase(), animation);
+		names = ImmutableList.copyOf(ANIMATIONS.keySet());
 	}
 	
 	public static Optional<Animation> of(String name) {
@@ -47,5 +52,9 @@ public abstract class Animation {
 		}
 		
 		return Optional.empty();
+	}
+	
+	public static List<String> listNames() {
+		return names;
 	}
 }
