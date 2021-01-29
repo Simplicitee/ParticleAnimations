@@ -57,27 +57,23 @@ public class AnimateCommand implements SubCommand {
 		String msg = ChatColor.GREEN + "Started animation " + anim.getName() + " with effect " + effect.getName();
 		ActiveInfo info = Manager.getInfo(player);
 		if (info.isPresent(anim)) {
-			msg = ChatColor.AQUA + "Animation " + anim.getName() + " effect replaced with " + effect.getName();
+			msg = ChatColor.AQUA + "Replaced animation " + anim.getName() + " effect with " + effect.getName();
 		}
 		
 		info.set(anim, effect);
 		
 		if (sender != player) {
-			player.sendMessage(sender.getName() + " " + msg);
+			player.sendMessage(sender.getName() + " " + msg.substring(0, 1).toLowerCase() + msg.substring(1) + " for you");
 		}
 		return msg;
 	}
 
 	@Override
 	public List<String> getTabComplete(CommandSender sender, String arg, int argCount) {
-		if (!sender.hasPermission("animations.use")) {
-			return null;
-		}
-		
 		if (argCount == 1) {
-			return ParticleEffect.listNames();
+			return ParticleEffect.listNames().stream().filter((s) -> sender.hasPermission("photon.effect." + s)).collect(Collectors.toList());
 		} else if (argCount == 2) {
-			return Animation.listNames();
+			return Animation.listNames().stream().filter((s) -> sender.hasPermission("photon.animation." + s)).collect(Collectors.toList());
 		} else if (argCount == 3) {
 			return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 		}

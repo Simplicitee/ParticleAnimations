@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.simplicitee.photon.animation.Animation;
+import me.simplicitee.photon.animation.HelixAnimation;
 import me.simplicitee.photon.animation.SpiralAnimation;
 import me.simplicitee.photon.command.PhotonCommand;
 import me.simplicitee.photon.particle.data.EffectDataGenerator;
@@ -48,7 +49,7 @@ public class PhotonPlugin extends JavaPlugin {
 		}
 		FileUtil.readEffects(effectsFile);
 		
-		registerCommand(getServer().getPluginCommand("animation"), new PhotonCommand());
+		registerCommand(getServer().getPluginCommand("photon"), new PhotonCommand());
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> Manager.tick(), 0, 1);
 	}
 	
@@ -64,13 +65,14 @@ public class PhotonPlugin extends JavaPlugin {
 	
 	private void loadBuiltInAnimations() {
 		Animation.register(new SpiralAnimation());
+		Animation.register(new HelixAnimation());
 	}
 	
 	private void loadPropertiesDefaults() {
 		properties = new Config(new File(getDataFolder(), "properties.yml"));
 		FileConfiguration config = properties.bukkit();
 		
-		config.addDefault("MessagePrefix", "&l&e[&bPhoton&l&e]");
+		config.addDefault("MessagePrefix", "&e&l[&b&lPhoton&e&l]");
 		
 		properties.save();
 	}
@@ -78,15 +80,15 @@ public class PhotonPlugin extends JavaPlugin {
 	private List<String> getDefaultEffects() {
 		List<String> effects = new ArrayList<>();
 		
-		effects.add("RedDust redstone dust:255,85,85,1");
-		effects.add("BlueDust redstone dust:85,85,255,1");
-		effects.add("GreenDust redstone dust:85,255,85,1");
-		effects.add("YellowDust redstone dust:255,255,0,1");
-		effects.add("MagentaDust redstone dust:255,85,255,1");
-		effects.add("AquaDust redstone dust:85,255,255,1");
-		effects.add("OrangeDust redstone dust:255,170,0,1");
-		effects.add("BlackDust redstone dust:0,0,0,1");
-		effects.add("WhiteDust redstone dust:255,255,255,1");
+		effects.add("RedDust REDSTONE dust:255,85,85,1");
+		effects.add("BlueDust REDSTONE dust:85,85,255,1");
+		effects.add("GreenDust REDSTONE dust:85,255,85,1");
+		effects.add("YellowDust REDSTONE dust:255,255,0,1");
+		effects.add("MagentaDust REDSTONE dust:255,85,255,1");
+		effects.add("AquaDust REDSTONE dust:85,255,255,1");
+		effects.add("OrangeDust REDSTONE dust:255,170,0,1");
+		effects.add("BlackDust REDSTONE dust:0,0,0,1");
+		effects.add("WhiteDust REDSTONE dust:255,255,255,1");
 		effects.add("Flames FLAME");
 		effects.add("BlueFlames SOUL_FIRE_FLAME");
 		

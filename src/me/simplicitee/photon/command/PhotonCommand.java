@@ -53,7 +53,7 @@ public class PhotonCommand implements CommandExecutor, TabCompleter {
 		if (args.length == 1) {
 			results = new ArrayList<>(CMDS.keySet());
 		} else {
-			if (CMDS.containsKey(args[0].toLowerCase())) {
+			if (CMDS.containsKey(args[0].toLowerCase()) && sender.hasPermission("photon.command." + args[0].toLowerCase())) {
 				results = CMDS.get(args[0].toLowerCase()).getTabComplete(sender, args[args.length - 1], args.length - 1);
 			}
 		}

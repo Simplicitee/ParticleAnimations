@@ -4,9 +4,6 @@ api-version: 1.16
 version: 1.0.0
 main: me.simplicitee.photon.PhotonPlugin
 commands:
-  animation: 
+  photon:
     usage: /<command>
-    default: op
-permissions:
-  animations.use:
     default: op
