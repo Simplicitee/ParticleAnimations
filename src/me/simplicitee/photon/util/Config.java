@@ -12,12 +12,13 @@ public class Config {
 	
 	public Config(File file) {
 		this.file = file;
-		this.reload();
+		this.config = YamlConfiguration.loadConfiguration(file);
+		this.init();
 	}
 	
-	public void reload() {
+	private void init() {
 		if (!file.getParentFile().exists()) {
-			file.getParentFile().mkdir();
+			file.getParentFile().mkdirs();
 		}
 		
 		if (!file.exists()) {
@@ -27,11 +28,18 @@ public class Config {
 				e.printStackTrace();
 			}
 		}
-		this.config = YamlConfiguration.loadConfiguration(file);
+	}
+	
+	public void reload() {
+		try {
+			this.config.load(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void save() {
-		this.reload();
+		this.init();
 		config.options().copyDefaults(true);
 		try {
 			config.save(file);

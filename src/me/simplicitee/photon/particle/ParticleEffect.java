@@ -45,7 +45,7 @@ public class ParticleEffect {
 	private int amount = 1;
 	private double offsetX = 0, offsetY = 0, offsetZ = 0, extra = 0;
 	
-	private ParticleEffect(String name, Particle particle, Object data) {
+	protected ParticleEffect(String name, Particle particle, Object data) {
 		this.name = name;
 		this.particle = particle;
 		this.data = DEFAULTS.containsKey(particle) ? (DEFAULTS.get(particle).getClass().isInstance(data) ? data : DEFAULTS.get(particle)) : null;

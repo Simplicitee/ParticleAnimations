@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.simplicitee.photon.animation.Animation;
 import me.simplicitee.photon.animation.HelixAnimation;
+import me.simplicitee.photon.animation.OrbitAnimation;
 import me.simplicitee.photon.animation.SpiralAnimation;
 import me.simplicitee.photon.command.PhotonCommand;
 import me.simplicitee.photon.particle.ParticleEffect;
@@ -68,6 +69,7 @@ public class PhotonPlugin extends JavaPlugin {
 	private void loadBuiltInAnimations() {
 		Animation.register(new SpiralAnimation());
 		Animation.register(new HelixAnimation());
+		Animation.register(new OrbitAnimation());
 	}
 	
 	private void loadPropertiesDefaults() {
@@ -148,16 +150,26 @@ public class PhotonPlugin extends JavaPlugin {
 	
 	public static void reload(CommandSender sender) {
 		instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, () -> {
+			// rload configs
 			properties.reload();
 			animations.reload();
-			
 			messagePrefix = ChatColor.translateAlternateColorCodes('&', properties.bukkit().getString("MessagePrefix").trim()) + " " + ChatColor.RESET;
 			
+			// clean out the active animations
 			Manager.clean();
+			
+			// reload registered animations
 			Animation.clean();
+			instance.loadBuiltInAnimations();
 			FileUtil.readAll(animationFolder, (a) -> Animation.register(a));
+			
+			// reload registered particle effects
 			ParticleEffect.clean();
+			if (!effectsFile.exists()) {
+				instance.loadEffectsDefault();
+			}
 			FileUtil.readEffects(effectsFile);
+			
 			sender.sendMessage(messagePrefix + "Reload complete!");
 		});
 	}
