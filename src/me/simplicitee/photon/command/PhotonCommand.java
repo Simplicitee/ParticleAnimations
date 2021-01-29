@@ -24,6 +24,7 @@ public class PhotonCommand implements CommandExecutor, TabCompleter {
 		registerSub(new AnimateCommand());
 		registerSub(new ClearCommand());
 		registerSub(new HelpCommand());
+		registerSub(new ReloadCommand());
 	}
 
 	@Override

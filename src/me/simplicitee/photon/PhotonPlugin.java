@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -15,6 +16,7 @@ import me.simplicitee.photon.animation.Animation;
 import me.simplicitee.photon.animation.HelixAnimation;
 import me.simplicitee.photon.animation.SpiralAnimation;
 import me.simplicitee.photon.command.PhotonCommand;
+import me.simplicitee.photon.particle.ParticleEffect;
 import me.simplicitee.photon.particle.data.EffectDataGenerator;
 import me.simplicitee.photon.util.Config;
 import me.simplicitee.photon.util.FileUtil;
@@ -142,5 +144,21 @@ public class PhotonPlugin extends JavaPlugin {
 	
 	public static void print(String message) {
 		instance.getLogger().info(message);
+	}
+	
+	public static void reload(CommandSender sender) {
+		instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, () -> {
+			properties.reload();
+			animations.reload();
+			
+			messagePrefix = ChatColor.translateAlternateColorCodes('&', properties.bukkit().getString("MessagePrefix").trim()) + " " + ChatColor.RESET;
+			
+			Manager.clean();
+			Animation.clean();
+			FileUtil.readAll(animationFolder, (a) -> Animation.register(a));
+			ParticleEffect.clean();
+			FileUtil.readEffects(effectsFile);
+			sender.sendMessage(messagePrefix + "Reload complete!");
+		});
 	}
 }

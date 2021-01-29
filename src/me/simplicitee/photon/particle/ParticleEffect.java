@@ -102,4 +102,9 @@ public class ParticleEffect {
 	public static List<String> listNames() {
 		return names;
 	}
+	
+	public static void clean() {
+		EFFECTS.clear();
+		names = null;
+	}
 }

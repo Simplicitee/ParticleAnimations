@@ -12,7 +12,6 @@ public class Config {
 	
 	public Config(File file) {
 		this.file = file;
-		this.config = YamlConfiguration.loadConfiguration(file);
 		this.reload();
 	}
 	
@@ -28,6 +27,7 @@ public class Config {
 				e.printStackTrace();
 			}
 		}
+		this.config = YamlConfiguration.loadConfiguration(file);
 	}
 	
 	public void save() {

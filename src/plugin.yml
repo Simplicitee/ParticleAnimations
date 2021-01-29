@@ -1,7 +1,7 @@
 name: Photon
 author: Simplicitee
 api-version: 1.16
-version: 1.0.0
+version: 0.1.0
 main: me.simplicitee.photon.PhotonPlugin
 commands:
   photon:

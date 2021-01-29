@@ -57,4 +57,9 @@ public abstract class Animation {
 	public static List<String> listNames() {
 		return names;
 	}
+	
+	public static void clean() {
+		ANIMATIONS.clear();
+		names = null;
+	}
 }

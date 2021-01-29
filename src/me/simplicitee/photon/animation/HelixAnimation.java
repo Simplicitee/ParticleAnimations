@@ -14,7 +14,7 @@ public class HelixAnimation extends ConfigurableAnimation {
 	public void populate() {
 		config.addDefault("Radius", 0.7);
 		config.addDefault("Height", 1.84);
-		config.addDefault("AngleIncrement", 2);
+		config.addDefault("AngleIncrement", 30);
 		config.addDefault("YStepIncrement", 0.1);
 	}
 
