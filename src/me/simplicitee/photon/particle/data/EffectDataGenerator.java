@@ -86,6 +86,10 @@ public abstract class EffectDataGenerator {
 		
 		register(new ColorGenerator());
 		register(new DustGenerator());
+		register(new BlockGenerator());
+		register(new ItemGenerator());
+		register(new VectorGenerator());
+		register(new NoteGenerator());
 		
 		init = true;
 	}

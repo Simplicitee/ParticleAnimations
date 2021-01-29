@@ -24,6 +24,11 @@ public class AnimateCommand implements SubCommand {
 	public String getArgTemplate() {
 		return "<effect> <animation> [target]";
 	}
+	
+	@Override
+	public String getHelpMessage() {
+		return "Start an animation with an effect for the target player, or yourself if none is given.";
+	}
 
 	@Override
 	public String execute(CommandSender sender, String[] args) {
@@ -38,6 +43,10 @@ public class AnimateCommand implements SubCommand {
 			player = Bukkit.getPlayer(args[2]);
 		} else {
 			player = (Player) sender;
+		}
+		
+		if (player != sender && !sender.hasPermission("photon.command.others")) {
+			return ChatColor.RED + "You do not have permission to use commands on other players";
 		}
 		
 		ParticleEffect effect = ParticleEffect.of(args[0]).orElse(null);
@@ -64,7 +73,9 @@ public class AnimateCommand implements SubCommand {
 		
 		if (sender != player) {
 			player.sendMessage(sender.getName() + " " + msg.substring(0, 1).toLowerCase() + msg.substring(1) + " for you");
+			msg += " for " + ChatColor.WHITE + player.getName();
 		}
+		
 		return msg;
 	}
 

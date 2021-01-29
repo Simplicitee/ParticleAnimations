@@ -8,6 +8,7 @@ public interface SubCommand {
 
 	public String getLabel();
 	public String getArgTemplate();
-	public List<String> getTabComplete(CommandSender sender, String arg, int argCount);
+	public String getHelpMessage();
 	public String execute(CommandSender sender, String[] args);
+	public List<String> getTabComplete(CommandSender sender, String arg, int argCount);
 }

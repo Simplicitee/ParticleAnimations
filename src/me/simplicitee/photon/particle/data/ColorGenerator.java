@@ -6,6 +6,8 @@ public class ColorGenerator extends EffectDataGenerator {
 
 	public Parameter<?>[] params = {INT, INT, INT};
 	
+	ColorGenerator() {}
+	
 	@Override
 	public String getLabel() {
 		return "color";

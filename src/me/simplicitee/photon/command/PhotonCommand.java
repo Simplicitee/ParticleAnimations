@@ -22,6 +22,8 @@ public class PhotonCommand implements CommandExecutor, TabCompleter {
 	// register default commands
 	static {
 		registerSub(new AnimateCommand());
+		registerSub(new ClearCommand());
+		registerSub(new HelpCommand());
 	}
 
 	@Override
@@ -34,7 +36,7 @@ public class PhotonCommand implements CommandExecutor, TabCompleter {
 		
 		SubCommand cmd = CMDS.get(args[0].toLowerCase());
 		
-		if (cmd != null) {
+		if (cmd != null && sender.hasPermission("photon.command." + cmd.getLabel().toLowerCase())) {
 			sender.sendMessage(PhotonPlugin.getMessagePrefix() + cmd.execute(sender, Arrays.copyOfRange(args, 1, args.length)));
 		} else {
 			sender.sendMessage(PhotonPlugin.getMessagePrefix() + ChatColor.RED + "Unknown subcommand for /particle");
@@ -79,5 +81,13 @@ public class PhotonCommand implements CommandExecutor, TabCompleter {
 		current.add("/photon " + cmd.getLabel() + " " + cmd.getArgTemplate());
 		usages = current.toArray(new String[0]);
 		return CMDS.put(cmd.getLabel().toLowerCase(), cmd) == null;
+	}
+	
+	public static SubCommand getSubCommand(String label) {
+		return CMDS.get(label.toLowerCase());
+	}
+	
+	public static List<String> getCommandLabels() {
+		return new ArrayList<>(CMDS.keySet());
 	}
 }

@@ -7,7 +7,7 @@ import me.simplicitee.photon.util.Updateable;
 public class HelixAnimation extends ConfigurableAnimation {
 
 	public HelixAnimation() {
-		super("helix");
+		super("Helix");
 	}
 
 	@Override

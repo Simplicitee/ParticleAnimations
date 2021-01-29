@@ -7,6 +7,8 @@ public class DustGenerator extends EffectDataGenerator {
 
 	private final Parameter<?>[] params = {INT, INT, INT, FLOAT};
 	
+	DustGenerator() {}
+	
 	@Override
 	public String getLabel() {
 		return "dust";
