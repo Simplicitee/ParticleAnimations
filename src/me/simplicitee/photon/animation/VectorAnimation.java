@@ -34,8 +34,8 @@ public class VectorAnimation extends Animation {
 		}
 
 		@Override
-		public Location update() {
-			return updater.get().add(vectors.get(step));
+		public void update() {
+			addLocation(updater.get().add(vectors.get(step)));
 		}
 		
 		@Override

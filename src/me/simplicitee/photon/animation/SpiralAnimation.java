@@ -38,8 +38,8 @@ public class SpiralAnimation extends ConfigurableAnimation {
 		}
 
 		@Override
-		public Location update() {
-			return updater.get().add(radius * Math.cos(angle), height/2 * (1 + Math.sin(vertical)), radius * Math.sin(angle));
+		public void update() {
+			addLocation(updater.get().add(radius * Math.cos(angle), height/2 * (1 + Math.sin(vertical)), radius * Math.sin(angle)));
 		}
 		
 		@Override

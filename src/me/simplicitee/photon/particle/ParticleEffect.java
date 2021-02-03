@@ -1,5 +1,9 @@
 package me.simplicitee.photon.particle;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +19,12 @@ import org.bukkit.util.Vector;
 
 import com.google.common.collect.ImmutableList;
 
+import me.simplicitee.photon.PhotonPlugin;
+import me.simplicitee.photon.util.FileUtil;
+
 public class ParticleEffect {
 	
+	private static File effectsFile;
 	private static final Map<String, ParticleEffect> EFFECTS = new HashMap<>();
 	private static final Map<Particle, Object> DEFAULTS = new HashMap<>();
 	private static ImmutableList<String> names;
@@ -41,9 +49,9 @@ public class ParticleEffect {
 
 	private String name;
 	private Particle particle;
-	private Object data;
-	private int amount = 1;
-	private double offsetX = 0, offsetY = 0, offsetZ = 0, extra = 0;
+	protected Object data;
+	protected int amount = 1;
+	protected double offsetX = 0, offsetY = 0, offsetZ = 0, extra = 0;
 	
 	protected ParticleEffect(String name, Particle particle, Object data) {
 		this.name = name;
@@ -99,12 +107,63 @@ public class ParticleEffect {
 		return Optional.of(effect);
 	}
 	
+	public static <T extends ParticleEffect> Optional<T> register(T effect) {
+		if (EFFECTS.containsKey(effect.getName().toLowerCase())) {
+			return Optional.empty();
+		}
+		
+		EFFECTS.put(effect.getName().toLowerCase(), effect);
+		names = ImmutableList.copyOf(EFFECTS.keySet());
+		return Optional.of(effect);
+	}
+	
 	public static List<String> listNames() {
 		return names;
 	}
 	
-	public static void clean() {
+	public static void reload() {
 		EFFECTS.clear();
 		names = null;
+		
+		effectsFile = new File(PhotonPlugin.getFolder(), "effects.txt");
+		if (!effectsFile.exists()) {
+			loadDefault();
+		}
+		
+		register(new RainbowDust());
+		register(new RainbowNote());
+		FileUtil.readEffects(effectsFile);
+	}
+	
+	private static void loadDefault() {
+		try {
+			effectsFile.createNewFile();
+			PrintWriter writer = new PrintWriter(new FileWriter(effectsFile, true));
+			for (String effect : getDefaultEffects()) {
+				writer.println(effect);
+			}
+			
+			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static List<String> getDefaultEffects() {
+		List<String> effects = new ArrayList<>();
+		
+		effects.add("RedDust REDSTONE dust:255,85,85,1");
+		effects.add("BlueDust REDSTONE dust:85,85,255,1");
+		effects.add("GreenDust REDSTONE dust:85,255,85,1");
+		effects.add("YellowDust REDSTONE dust:255,255,0,1");
+		effects.add("MagentaDust REDSTONE dust:255,85,255,1");
+		effects.add("AquaDust REDSTONE dust:85,255,255,1");
+		effects.add("OrangeDust REDSTONE dust:255,170,0,1");
+		effects.add("BlackDust REDSTONE dust:0,0,0,1");
+		effects.add("WhiteDust REDSTONE dust:255,255,255,1");
+		effects.add("Flames FLAME");
+		effects.add("BlueFlames SOUL_FIRE_FLAME");
+		
+		return effects;
 	}
 }

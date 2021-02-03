@@ -1,10 +1,6 @@
 package me.simplicitee.photon;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -13,20 +9,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.simplicitee.photon.animation.Animation;
-import me.simplicitee.photon.animation.HelixAnimation;
-import me.simplicitee.photon.animation.OrbitAnimation;
-import me.simplicitee.photon.animation.SpiralAnimation;
 import me.simplicitee.photon.command.PhotonCommand;
 import me.simplicitee.photon.particle.ParticleEffect;
+import me.simplicitee.photon.particle.RainbowDustOptions;
 import me.simplicitee.photon.particle.data.EffectDataGenerator;
 import me.simplicitee.photon.util.Config;
-import me.simplicitee.photon.util.FileUtil;
 import net.md_5.bungee.api.ChatColor;
 
 public class PhotonPlugin extends JavaPlugin {
 
 	private static PhotonPlugin instance;
-	private static File animationFolder, effectsFile;
 	private static String messagePrefix;
 	private static Config properties, animations;
 	
@@ -36,24 +28,14 @@ public class PhotonPlugin extends JavaPlugin {
 		loadPropertiesDefaults();
 		messagePrefix = ChatColor.translateAlternateColorCodes('&', properties.bukkit().getString("MessagePrefix").trim()) + " " + ChatColor.RESET;
 		animations = new Config(new File(getDataFolder(), "animations.yml"));
-		loadBuiltInAnimations();
-		animationFolder = new File(getDataFolder(), "/animations/");
-		if (!animationFolder.exists()) {
-			animationFolder.mkdir();
-		} else {
-			FileUtil.readAll(animationFolder, (a) -> Animation.register(a));
-		}
 		
-		EffectDataGenerator.init();
-		
-		effectsFile = new File(getDataFolder(), "effects.txt");
-		if (!effectsFile.exists()) {
-			loadEffectsDefault();
-		}
-		FileUtil.readEffects(effectsFile);
+		Animation.reload();
+		EffectDataGenerator.reload();
+		ParticleEffect.reload();
 		
 		registerCommand(getServer().getPluginCommand("photon"), new PhotonCommand());
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> Manager.tick(), 0, 1);
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> RainbowDustOptions.update(), 0, 1);
 	}
 	
 	@Override
@@ -66,12 +48,6 @@ public class PhotonPlugin extends JavaPlugin {
 		cmd.setTabCompleter(command);
 	}
 	
-	private void loadBuiltInAnimations() {
-		Animation.register(new SpiralAnimation());
-		Animation.register(new HelixAnimation());
-		Animation.register(new OrbitAnimation());
-	}
-	
 	private void loadPropertiesDefaults() {
 		properties = new Config(new File(getDataFolder(), "properties.yml"));
 		FileConfiguration config = properties.bukkit();
@@ -79,38 +55,6 @@ public class PhotonPlugin extends JavaPlugin {
 		config.addDefault("MessagePrefix", "&e&l[&b&lPhoton&e&l]");
 		
 		properties.save();
-	}
-	
-	private List<String> getDefaultEffects() {
-		List<String> effects = new ArrayList<>();
-		
-		effects.add("RedDust REDSTONE dust:255,85,85,1");
-		effects.add("BlueDust REDSTONE dust:85,85,255,1");
-		effects.add("GreenDust REDSTONE dust:85,255,85,1");
-		effects.add("YellowDust REDSTONE dust:255,255,0,1");
-		effects.add("MagentaDust REDSTONE dust:255,85,255,1");
-		effects.add("AquaDust REDSTONE dust:85,255,255,1");
-		effects.add("OrangeDust REDSTONE dust:255,170,0,1");
-		effects.add("BlackDust REDSTONE dust:0,0,0,1");
-		effects.add("WhiteDust REDSTONE dust:255,255,255,1");
-		effects.add("Flames FLAME");
-		effects.add("BlueFlames SOUL_FIRE_FLAME");
-		
-		return effects;
-	}
-	
-	private void loadEffectsDefault() {
-		try {
-			effectsFile.createNewFile();
-			PrintWriter writer = new PrintWriter(new FileWriter(effectsFile, true));
-			for (String effect : getDefaultEffects()) {
-				writer.println(effect);
-			}
-			
-			writer.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/**
@@ -148,6 +92,10 @@ public class PhotonPlugin extends JavaPlugin {
 		instance.getLogger().info(message);
 	}
 	
+	public static File getFolder() {
+		return instance.getDataFolder();
+	}
+	
 	public static void reload(CommandSender sender) {
 		instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, () -> {
 			// rload configs
@@ -157,18 +105,9 @@ public class PhotonPlugin extends JavaPlugin {
 			
 			// clean out the active animations
 			Manager.clean();
-			
-			// reload registered animations
-			Animation.clean();
-			instance.loadBuiltInAnimations();
-			FileUtil.readAll(animationFolder, (a) -> Animation.register(a));
-			
-			// reload registered particle effects
-			ParticleEffect.clean();
-			if (!effectsFile.exists()) {
-				instance.loadEffectsDefault();
-			}
-			FileUtil.readEffects(effectsFile);
+			Animation.reload();
+			EffectDataGenerator.reload();
+			ParticleEffect.reload();
 			
 			sender.sendMessage(messagePrefix + "Reload complete!");
 		});

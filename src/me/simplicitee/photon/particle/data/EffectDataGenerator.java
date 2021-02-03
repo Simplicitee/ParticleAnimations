@@ -7,7 +7,6 @@ import java.util.Optional;
 public abstract class EffectDataGenerator {
 
 	private static final Map<String, EffectDataGenerator> CACHE = new HashMap<>();
-	private static boolean init = false;
 	
 	public static final EffectDataGenerator NULL = new EffectDataGenerator() {
 
@@ -81,16 +80,13 @@ public abstract class EffectDataGenerator {
 		return get(split[0]).orElse(NULL).evaluate(split[1]);
 	}
 	
-	public static void init() {
-		if (init) return;
-		
+	public static void reload() {
+		CACHE.clear();
 		register(new ColorGenerator());
 		register(new DustGenerator());
 		register(new BlockGenerator());
 		register(new ItemGenerator());
 		register(new VectorGenerator());
 		register(new NoteGenerator());
-		
-		init = true;
 	}
 }

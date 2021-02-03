@@ -1,5 +1,6 @@
 package me.simplicitee.photon.animation;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,10 +11,13 @@ import org.bukkit.Location;
 
 import com.google.common.collect.ImmutableList;
 
+import me.simplicitee.photon.PhotonPlugin;
+import me.simplicitee.photon.util.FileUtil;
 import me.simplicitee.photon.util.Updateable;
 
 public abstract class Animation {
 	
+	private static File animationFolder;
 	private static final Map<String, Animation> ANIMATIONS = new HashMap<>();
 	private static ImmutableList<String> names;
 	
@@ -58,8 +62,19 @@ public abstract class Animation {
 		return names;
 	}
 	
-	public static void clean() {
+	public static void reload() {
 		ANIMATIONS.clear();
 		names = null;
+		
+		register(new SpiralAnimation());
+		register(new HelixAnimation());
+		register(new OrbitAnimation());
+		
+		animationFolder = new File(PhotonPlugin.getFolder(), "/animations/");
+		if (!animationFolder.exists()) {
+			animationFolder.mkdir();
+		} else {
+			FileUtil.readAll(animationFolder, (a) -> Animation.register(a));
+		}
 	}
 }

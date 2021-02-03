@@ -72,7 +72,9 @@ public class ActiveInfo {
 	
 	boolean updateAll() {
 		for (EffectAnimator anim : actives.values()) {
-			anim.effect.display(anim.animator.update());
+			anim.animator.update();
+			anim.animator.getLocations().forEach((l) -> anim.effect.display(l));
+			anim.animator.getLocations().clear();
 			anim.animator.postUpdate();
 		}
 		return actives.isEmpty();

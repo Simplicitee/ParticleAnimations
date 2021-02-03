@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 import org.apache.commons.lang.Validate;
 import org.bukkit.entity.Player;
 
+import me.simplicitee.photon.particle.RainbowDustOptions;
+import me.simplicitee.photon.particle.RainbowNote;
 import me.simplicitee.photon.util.Updateable;
 
 public final class Manager {
@@ -50,6 +52,8 @@ public final class Manager {
 				entries.remove();
 			}
 		}
+		RainbowDustOptions.update();
+		RainbowNote.update();
 	}
 	
 	static void clean() {

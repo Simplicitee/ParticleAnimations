@@ -26,7 +26,6 @@ public class HelixAnimation extends ConfigurableAnimation {
 	public static class HelixAnimator extends Animator {
 		
 		private double angle = 0, theta, radius, step = 0, stepDelta, height;
-		private boolean side = false;
 
 		public HelixAnimator(Updateable<Location> updater, double theta, double radius, double height, double stepDelta) {
 			super(updater);
@@ -37,21 +36,16 @@ public class HelixAnimation extends ConfigurableAnimation {
 		}
 
 		@Override
-		public Location update() {
-			return updater.get().add(radius * Math.cos(angle), step, radius * Math.sin(angle));
+		public void update() {
+			for (int i = 0; i < 2; ++i) {
+				addLocation(updater.get().add(radius * Math.cos(angle + i * Math.PI), step, radius * Math.sin(angle + i * Math.PI)));
+			}
 		}
 
 		@Override
 		public void postUpdate() {
-			if (side) {
-				step += stepDelta;
-				step %= height;
-				angle += Math.PI;
-				angle += theta;
-			} else {
-				angle -= Math.PI;
-			}
-			side = !side;
+			angle += theta;
+			step = (step + stepDelta) % height;
 		}
 		
 	}
